@@ -121,17 +121,17 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
             <div class="form-group <?php echo (!empty($username_err)) ? 'has-error' : ''; ?>">
                
                 <input type="text" name="username" class="fadeIn second" placeholder="username" value="<?php echo $username; ?>">
-                <span class="help-block"><?php echo $username_err; ?></span>
+                <br><span class="help-block"><?php echo $username_err; ?></span>
             </div>    
             <div class="form-group <?php echo (!empty($password_err)) ? 'has-error' : ''; ?>">
                
                 <input type="text" name="password" class="fadeIn third" placeholder="password" value="<?php echo $password; ?>">
-                <span class="help-block"><?php echo $password_err; ?></span>
+               <br> <span class="help-block"><?php echo $password_err; ?></span>
             </div>
             <div class="form-group <?php echo (!empty($confirm_password_err)) ? 'has-error' : ''; ?>">
                
                 <input type="text" name="confirm_password" class="fadeIn third" placeholder="confirm password" value="<?php echo $confirm_password; ?>">
-                <span class="help-block"><?php echo $confirm_password_err; ?></span>
+               <br> <span class="help-block"><?php echo $confirm_password_err; ?></span>
             </div>
             <div class="form-group">
                 <input type="submit" class="fadeIn fourth" value="Submit">
@@ -139,6 +139,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
             </div>
             <p>Already have an account? <a href="login.php">Login here</a>.</p>
         </form>
-    </div>    
+    </div>   
+</div> 	
 </body>
 </html>

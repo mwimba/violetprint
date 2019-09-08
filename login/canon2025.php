@@ -15,25 +15,25 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
 require_once "../configs/config.php";
  
 // Define variables and initialize with empty values
-$username = $password = $confirm_password = "";
-$username_err = $password_err = $confirm_password_err = "";
+$prints = $copy = $confirm_copy = "";
+$prints_err = $copy_err = $confirm_copy_err = "";
  
 // Processing form data when form is submitted
 if($_SERVER["REQUEST_METHOD"] == "POST"){
  
-    // Validate username
-    if(empty(trim($_POST["username"]))){
-        $username_err = "Please enter a username.";
+    // Validate prints
+    if(empty(trim($_POST["prints"]))){
+        $prints_err = "Please enter a prints number.";
     } else{
         // Prepare a select statement
-        $sql = "SELECT id FROM users WHERE username = ?";
+        $sql = "SELECT id FROM canon2020 WHERE prints = ?";
         
         if($stmt = mysqli_prepare($link, $sql)){
             // Bind variables to the prepared statement as parameters
-            mysqli_stmt_bind_param($stmt, "s", $param_username);
+            mysqli_stmt_bind_param($stmt, "s", $param_prints);
             
             // Set parameters
-            $param_username = trim($_POST["username"]);
+            $param_prints = trim($_POST["prints"]);
             
             // Attempt to execute the prepared statement
             if(mysqli_stmt_execute($stmt)){
@@ -41,9 +41,9 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                 mysqli_stmt_store_result($stmt);
                 
                 if(mysqli_stmt_num_rows($stmt) == 1){
-                    $username_err = "This username is already taken.";
+                    $prints_err = "This prints is already taken.";
                 } else{
-                    $username = trim($_POST["username"]);
+                    $prints = trim($_POST["prints"]);
                 }
             } else{
                 echo "Oops! Something went wrong. Please try again later.";
@@ -54,51 +54,53 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
         mysqli_stmt_close($stmt);
     }
     
-    // Validate password
-    if(empty(trim($_POST["password"]))){
-        $password_err = "Please enter a password.";     
-    } elseif(strlen(trim($_POST["password"])) < 6){
-        $password_err = "Password must have atleast 6 characters.";
+    // Validate copy
+    if(empty(trim($_POST["copy"]))){
+        $copy_err = "Please enter a copy value.";     
+    } elseif(strlen(trim($_POST["copy"])) < 6){
+        $copy_err = "copy must have atleast 6 characters.";
     } else{
-        $password = trim($_POST["password"]);
+        $copy = trim($_POST["copy"]);
     }
     
-    // Validate confirm password
-    if(empty(trim($_POST["confirm_password"]))){
-        $confirm_password_err = "Please confirm password.";     
-    } else{
-        $confirm_password = trim($_POST["confirm_password"]);
-        if(empty($password_err) && ($password != $confirm_password)){
-            $confirm_password_err = "Password did not match.";
-        }
-    }
+    // Validate confirm copy
+    //if(empty(trim($_POST["confirm_copy"]))){
+     //   $confirm_copy_err = "Please confirm copy.";     
+   // } else{
+   //     $confirm_copy = trim($_POST["confirm_copy"]);
+    //    if(empty($copy_err) && ($copy != $confirm_copy)){
+      //      $confirm_copy_err = "copy did not match.";
+      //  }
+   // }
     
     // Check input errors before inserting in database
-    //if(empty($username_err) && empty($password_err) && empty($confirm_password_err)){
+    if(empty($prints_err) && empty($copy_err) && empty($confirm_copy_err)){
         
         // Prepare an insert statement
-       // $sql = "INSERT INTO users (username, password) VALUES (?, ?)";
+        $sql = "INSERT INTO canon2025 (prints,copy) VALUES (?, ?)";
          
-       // if($stmt = mysqli_prepare($link, $sql)){
+        if($stmt = mysqli_prepare($link, $sql)){
             // Bind variables to the prepared statement as parameters
-           // mysqli_stmt_bind_param($stmt, "ss", $param_username, $param_password);
+            mysqli_stmt_bind_param($stmt, "ss", $param_prints, $param_copy);
             
             // Set parameters
-           // $param_username = $username;
-           // $param_password = password_hash($password, PASSWORD_DEFAULT); // Creates a password hash
+            $param_prints = $prints;
+            $param_copy = $copy; // Creates a copy hash
+			
+			//$param_copy = copy_hash($copy, copy_DEFAULT); // Creates a copy hash
             
             // Attempt to execute the prepared statement
-           // if(mysqli_stmt_execute($stmt)){
+            if(mysqli_stmt_execute($stmt)){
                 // Redirect to login page
-            //    header("location: login.php");
-            //} else{
+                header("location: login.php");
+            } else{
                 echo "Something went wrong. Please try again later.";
-           // }
-       // }
+            }
+        }
          
         // Close statement
-      //  mysqli_stmt_close($stmt);
-    //}
+        mysqli_stmt_close($stmt);
+    }
     
     // Close connection
     mysqli_close($link);
@@ -161,18 +163,17 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 	 </ul>
 	 <div  class="container center_div" id="formContent">
 	 
-	 <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
-           <div class="form-group <?php echo (!empty($username_err)) ? 'has-error' : ''; ?>">
+	  <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
+            <div class="form-group <?php echo (!empty($prints_err)) ? 'has-error' : ''; ?>">
                
-                <input type="text" name="username" class="fadeIn second" placeholder="number of prints" value="<?php echo $username; ?>">
-                <span class="help-block"><?php echo $username_err; ?></span>
+                <input type="text" name="prints" class="fadeIn second" placeholder="number of prints" value="<?php echo $prints; ?>">
+                <span class="help-block"><?php echo $prints_err; ?></span>
             </div>    
-            <div class="form-group <?php echo (!empty($password_err)) ? 'has-error' : ''; ?>">
+            <div class="form-group <?php echo (!empty($copy_err)) ? 'has-error' : ''; ?>">
                
-                <input type="text" name="password" class="fadeIn third" placeholder="number of copies" value="<?php echo $password; ?>">
-                <span class="help-block"><?php echo $password_err; ?></span>
+                <input type="text" name="copy" class="fadeIn third" placeholder="number of copies" value="<?php echo $copy; ?>">
+                <span class="help-block"><?php echo $copy_err; ?></span>
             </div>
-            
             
             <div class="form-group">
                 <input type="submit" class="fadeIn fourth" value="Submit">
