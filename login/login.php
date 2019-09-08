@@ -107,7 +107,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
       <img src="violet.jpg" id="icon" alt="violet print" />
     </div>
         
-        <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
+        <form autocomplete ="off" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
             <div class="form-group <?php echo (!empty($username_err)) ? 'has-error' : ''; ?>">
                 
                 <input type="text" name="username" class="fadeIn second" value="<?php echo $username; ?>" placeholder="username">
